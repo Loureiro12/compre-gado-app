@@ -41,7 +41,6 @@ export function CardCalculation({
   tagColor,
   tagTitle,
 }: ButtonProps) {
-  console.log('tagTitle', tagTitle)
   return (
     <Container>
       <ContainerDescription activeOpacity={0.8} onPress={clickCalculationCard}>

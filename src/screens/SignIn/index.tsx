@@ -41,7 +41,6 @@ export default function SignIn() {
           .email("Digite um e-mail válido"),
         password: Yup.string().required("A senha é obrigatório"),
       });
-      console.log('######', email, password)
       await schema.validate({ email, password });
       await signIn({ email, password });
       showMessage({

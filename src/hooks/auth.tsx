@@ -78,8 +78,6 @@ function AuthProvider({ children }: AuthProviderProps) {
       password,
     });
 
-    console.log("response", response.data);
-
     const { access_token, user } = response.data;
 
     await AsyncStorage.setItem(userStorageTokenKey, access_token);

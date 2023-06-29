@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://agro-api.onrender.com",
+  baseURL: "https://api.ofertaever.com",
 });
 
 export { api };

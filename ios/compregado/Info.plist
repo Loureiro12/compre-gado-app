@@ -46,6 +46,12 @@
         </dict>
       </dict>
     </dict>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to use your location.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>This application uses location to fetch weather information from the current region in order to provide a personalized experience to the user. Location information is collected only for internal use of the application and is not shared with third parties.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>This application uses location to fetch weather information from the current region in order to provide a personalized experience to the user. Location information is collected only for internal use of the application and is not shared with third parties.</string>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>
