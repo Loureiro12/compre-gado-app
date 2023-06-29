@@ -36,7 +36,6 @@ interface SignInCredentials {
 interface IAuthProviderProps {
   user: User;
   signIn(credentials: SignInCredentials): Promise<void>;
-  signInwithGoogle(): Promise<void>;
   signOut(): Promise<void>;
   userStorageLoading: boolean;
 }
@@ -83,6 +82,8 @@ function AuthProvider({ children }: AuthProviderProps) {
     await AsyncStorage.setItem(userStorageTokenKey, access_token);
     await AsyncStorage.setItem(userStorageUseKey, JSON.stringify(user));
 
+    api.defaults.headers.authorization = `Bearer ${access_token}`;
+
     setUser(user);
 
     // setData({ access_token, user });
@@ -99,15 +100,18 @@ function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     async function loadUserStorageDate() {
       const userStoraged = await AsyncStorage.getItem(userStorageUseKey);
+      const token = await AsyncStorage.getItem(userStorageTokenKey)
 
       if (userStoraged) {
         const userLogged = JSON.parse(userStoraged) as User;
         setUser(userLogged);
         setUserStorageLoading(false);
+        api.defaults.headers.authorization = `Bearer ${token}`;
+      } else {
+        signOut();
       }
     }
     loadUserStorageDate();
-    // signOut();
   }, []);
 
   return (
