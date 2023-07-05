@@ -1,3 +1,4 @@
 <resources>
-  <string name="app_name">compre-gado</string>
+  <string name="app_name">CompreGado</string>
+  <string moduleConfig="true" name="CodePushDeploymentKey">Qy8Jsz6tup7an_r99n0PS_2vJQ4465SCOkqu3</string>
 </resources>

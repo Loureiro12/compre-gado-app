@@ -12,11 +12,14 @@
     "expo-auth-session": "~4.0.3",
     "expo-crypto": "~12.2.1",
     "expo-font": "~11.1.1",
+    "expo-splash-screen": "~0.18.2",
+    "expo-status-bar": "~1.4.4",
     "moment": "^2.29.4",
     "phosphor-react-native": "^1.1.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.71.8",
+    "react-native-code-push": "^8.0.2",
     "react-native-flash-message": "^0.4.1",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-safe-area-context": "4.5.0",
@@ -24,9 +27,7 @@
     "react-native-web": "~0.18.7",
     "styled-components": "^6.0.0-rc.6",
     "yup": "^1.2.0",
-    "yup-locale-pt": "^0.0.9",
-    "expo-splash-screen": "~0.18.2",
-    "expo-status-bar": "~1.4.4"
+    "yup-locale-pt": "^0.0.9"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
@@ -39,7 +40,9 @@
     "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "codepush-deploy-ios-production": "appcenter codepush release-react -a contato.loureiro1-gmail.com/CompreGado -d Produção",
+    "codepush-deploy-android-production": "appcenter codepush release-react -a contato.loureiro1-gmail.com/CompreGado-1 -d Produção"
   },
   "version": "1.0.0",
   "private": true,
