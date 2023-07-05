@@ -10,10 +10,10 @@
       "web"
     ],
     "android": {
-      "package": "com.compregado"
+      "package": "org.name.melhoraMais01"
     },
     "ios": {
-      "bundleIdentifier": "com.compregado"
+      "bundleIdentifier": "org.name.melhoraMais01"
     }
   }
 }

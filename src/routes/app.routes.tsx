@@ -11,6 +11,7 @@ import {
 } from "../screens/RegisterCalculationEdit";
 import { ManageTag, ManageTagPropsRoute } from "../screens/ManageTag";
 import { EditTag, EditTagPropsRoute } from "../screens/EditTag";
+import {OfferingGroup} from '../screens/OfferingGroup'
 
 export type RootStackParamList = {
   CreateTag: CreateTagPropsRoute;
@@ -20,6 +21,7 @@ export type RootStackParamList = {
   Profile: undefined;
   ManageTag: ManageTagPropsRoute;
   EditTag: EditTagPropsRoute;
+  OfferingGroup: undefined;
 };
 
 const { Navigator, Screen } = createStackNavigator<RootStackParamList>();
@@ -60,6 +62,11 @@ export function AppRoutes() {
       <Screen
         name="EditTag"
         component={EditTag}
+        options={{ headerShown: false }}
+      />
+       <Screen
+        name="OfferingGroup"
+        component={OfferingGroup}
         options={{ headerShown: false }}
       />
     </Navigator>

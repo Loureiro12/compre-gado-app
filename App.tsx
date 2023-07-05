@@ -16,6 +16,7 @@ import { Loading } from "./src/components/Loading";
 import { Routes } from "./src/routes/index";
 import { AppProvider } from "./src/hooks";
 import { Platform } from "react-native";
+import { GlassfyProvider } from "./src/providers/GlassfyProvider";
 
 const CODEPUSH_KEY =
   Platform.OS === "android"
@@ -45,8 +46,10 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppProvider>{fontsLoaded ? <Routes /> : <Loading />}</AppProvider>
-      <FlashMessage position="top" />
+      <GlassfyProvider>
+        <AppProvider>{fontsLoaded ? <Routes /> : <Loading />}</AppProvider>
+        <FlashMessage position="top" />
+      </GlassfyProvider>
     </ThemeProvider>
   );
 };
