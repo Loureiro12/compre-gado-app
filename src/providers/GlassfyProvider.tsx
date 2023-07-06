@@ -7,6 +7,7 @@ import {
   GlassfyTransaction,
   GLASSFY_LOGLEVEL,
 } from "react-native-glassfy-module";
+import { useAuth } from "../hooks/auth";
 
 interface GlassfyProps {
   purchase?: (sku: GlassfySku) => Promise<void>;
@@ -31,6 +32,7 @@ export const GlassfyProvider = ({ children }: any) => {
   const [user, setUser] = useState<UserState>({
     pro: false,
   });
+  const { user: loggedUser } = useAuth();
   const [offerings, setOfferings] = useState<GlassfyOffering[]>([]);
   const [loadingPurchase, setLoadingPurchase] = useState(false);
 
@@ -58,7 +60,7 @@ export const GlassfyProvider = ({ children }: any) => {
 
   // Load all permissions a user has
   const loadPermissions = async () => {
-    let permissions = await Glassfy.permissions();
+    const permissions = await Glassfy.permissions();
     handleExistingPermissions(permissions.all);
   };
 
@@ -73,6 +75,9 @@ export const GlassfyProvider = ({ children }: any) => {
     setLoadingPurchase(true);
     try {
       const transaction = await Glassfy.purchaseSku(sku);
+      const subscriber = await Glassfy.connectCustomSubscriber(loggedUser.id);
+
+      console.log('##########', subscriber)
 
       if (transaction.receiptValidated) {
         handleSuccessfulTransactionResult(transaction, sku);

@@ -46,3 +46,5 @@ export const ModalExit = styled(Modal)``;
 export const ModalDeleteCalculation = styled(Modal)``;
 
 export const ModalAboutLocation = styled(Modal)``;
+
+export const ModalNeedSignature = styled(Modal)``;

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import { showMessage } from "react-native-flash-message";
 import { FlatList, View, Text } from "react-native";
 
@@ -23,7 +24,9 @@ import {
   ModalExit,
   ModalDeleteCalculation,
   ModalAboutLocation,
+  ModalNeedSignature,
 } from "./styles";
+import { useGlassfy } from "../../providers/GlassfyProvider";
 
 interface DashboardProps
   extends StackScreenProps<RootStackParamList, "Dashboard"> {}
@@ -35,6 +38,7 @@ export interface RegisterCalculationEditProps {
 export function Dashboard({ navigation, route }: DashboardProps) {
   const { user, signOut } = useAuth();
   const netInfo = useNetInfo();
+  const { user: usePurchase } = useGlassfy();
 
   const [calculations, setCalculations] = useState<any[]>([]);
   const [currentCalculation, setCurrentCalculation] = useState("");
@@ -44,6 +48,7 @@ export function Dashboard({ navigation, route }: DashboardProps) {
   const [loadingDeleteCalculation, setLoadingDeleteCalculation] =
     useState(false);
   const [modalAboutLocation, setModalAboutLocation] = useState(false);
+  const [modalNeedSignature, setModalNeedSignature] = useState(false);
   const [loadingCalculations, setLoadingCalculations] = useState(false);
   const [listTag, setListTag] = useState<any[]>([]);
 
@@ -136,6 +141,23 @@ export function Dashboard({ navigation, route }: DashboardProps) {
     });
   };
 
+  const checkIfSignatureIsRequired = () => {
+    const dataInicial = moment(user?.created_at);
+    const dataAtual = moment();
+
+    const dataFinal = dataInicial.clone().add(7, "days");
+
+    if (usePurchase.pro) {
+      navigation.navigate("RegisterCalculation");
+    } else {
+      if (dataAtual.isAfter(dataFinal)) {
+        setModalNeedSignature(true);
+      } else {
+        navigation.navigate("RegisterCalculation");
+      }
+    }
+  };
+
   useEffect(() => {
     lookingSavedCalculations();
     tagSearch();
@@ -154,9 +176,7 @@ export function Dashboard({ navigation, route }: DashboardProps) {
             key=""
           />
         </View>
-        <ButtonAddNewCalculation
-          onPress={() => navigation.navigate("RegisterCalculation")}
-        >
+        <ButtonAddNewCalculation onPress={() => checkIfSignatureIsRequired()}>
           <Ionicons name="add-circle-sharp" size={24} color="black" />
           <TitleButtonAddNewCalculation>
             Realizar novo cálculo
@@ -228,6 +248,15 @@ export function Dashboard({ navigation, route }: DashboardProps) {
         message="Temos uma ótima previsão do tempo para você, mas para isso precisamos que você nos conceda acesso à sua localização. Por favor, permita o acesso à sua localização para que possamos exibir a previsão do tempo mais precisa para a sua região. Obrigado!"
         alertModal
         onPressConfirmButton={() => setModalAboutLocation(false)}
+      />
+
+      <ModalNeedSignature
+        show={modalNeedSignature}
+        close={() => setModalNeedSignature(false)}
+        message="Você já experimentou o aplicativo gratuitamente por 7 dias. Para continuar utilizando, é necessário assinar."
+        onPressConfirmButton={() => navigation.navigate("OfferingGroup")}
+        cancelButtonText="Continuar sem Assinatura"
+        confirmButtonText="Assinar Agora"
       />
     </>
   );
