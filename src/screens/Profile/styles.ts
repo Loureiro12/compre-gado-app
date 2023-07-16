@@ -4,7 +4,6 @@ import { Button } from "../../components/Button";
 import { BorderlessButton } from "react-native-gesture-handler";
 import Modal from "../../components/Modal";
 
-
 export const Container = styled.View`
   flex: 1;
   justify-content: center;
@@ -51,3 +50,13 @@ export const DeleteAccountButtonText = styled.Text`
 `;
 
 export const ModalDeleteAccount = styled(Modal)``;
+
+export const Term = styled.TouchableOpacity`
+  margin-bottom: 20px;
+`;
+
+export const TextTerm = styled.Text`
+  font-size: ${({ theme }) => theme.FONT_SIZE.LG}px;
+  font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
+  color: ${({ theme }) => theme.COLORS.PRIMARY};
+`;

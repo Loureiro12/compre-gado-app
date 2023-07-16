@@ -35,6 +35,7 @@ export const GlassfyProvider = ({ children }: any) => {
   const { user: loggedUser } = useAuth();
   const [offerings, setOfferings] = useState<GlassfyOffering[]>([]);
   const [loadingPurchase, setLoadingPurchase] = useState(false);
+  const [isGlassfyInitialized, setIsGlassfyInitialized] = useState(false);
 
   const [isReady, setIsReady] = useState(false);
 
@@ -43,25 +44,39 @@ export const GlassfyProvider = ({ children }: any) => {
       // Intialise Glassfy and set our provider ready
       await Glassfy.initialize(GLASSFY_KEY, false);
       setIsReady(true);
-      // Glassfy.setLogLevel(GLASSFY_LOGLEVEL.ALL);
-
-      // Load all offerings (products) and permissions (previous purchases)
-      await loadOfferings();
-      await loadPermissions();
+      setIsGlassfyInitialized(true);
     };
     init();
   }, []);
 
+  const init = async () => {
+    await loadOfferings();
+    await loadPermissions();
+  };
+
+  useEffect(() => {
+    if (isReady) {
+      init();
+    }
+  }, [isReady]);
+
   // Load all offerings a user can purchase
   const loadOfferings = async () => {
+    // if (isGlassfyInitialized) {
     let offerings = await Glassfy.offerings();
+    console.log("#######offerings", offerings.all[0].skus);
     setOfferings(offerings.all);
+    // }
   };
 
   // Load all permissions a user has
   const loadPermissions = async () => {
+    // if (isGlassfyInitialized) {
     const permissions = await Glassfy.permissions();
+    console.log("#######permissions", permissions);
+
     handleExistingPermissions(permissions.all);
+    // }
   };
 
   // Restore previous purchases
@@ -77,8 +92,6 @@ export const GlassfyProvider = ({ children }: any) => {
       const transaction = await Glassfy.purchaseSku(sku);
       const subscriber = await Glassfy.connectCustomSubscriber(loggedUser.id);
 
-      console.log('##########', subscriber)
-
       if (transaction.receiptValidated) {
         handleSuccessfulTransactionResult(transaction, sku);
         setLoadingPurchase(false);
@@ -91,7 +104,7 @@ export const GlassfyProvider = ({ children }: any) => {
 
   // Update user state based on previous purchases
   const handleExistingPermissions = (permissions: GlassfyPermission[]) => {
-    const newUser: UserState = {pro: false };
+    const newUser: UserState = { pro: false };
 
     for (const perm of permissions) {
       if (perm.isValid) {

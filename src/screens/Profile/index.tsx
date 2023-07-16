@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import * as Yup from "yup";
+import * as Linking from "expo-linking";
 
 import { ScrollView, StatusBar } from "react-native";
 import { showMessage } from "react-native-flash-message";
@@ -21,6 +22,8 @@ import {
   DeleteAccountButtonText,
   ModalDeleteAccount,
   Separator,
+  Term,
+  TextTerm,
   Title,
   TitleConfirmPassword,
 } from "./styles";
@@ -113,6 +116,12 @@ export function Profile() {
     }
   };
 
+  const openTerm = () => {
+    Linking.openURL(
+      "https://www.iubenda.com/privacy-policy/43879835.pdf?admitad_uid=17691b157c9eb89c4c5c2437f3e196af&target=admitad"
+    );
+  };
+
   return (
     <>
       <Header title="Perfil" />
@@ -122,6 +131,9 @@ export function Profile() {
         style={{ backgroundColor: "#FCF9F2" }}
       >
         <Container>
+          <Term onPress={openTerm}>
+            <TextTerm>Termos de uso</TextTerm>
+          </Term>
           <Title>Informação do Perfil</Title>
           <ContainerInput>
             <InputEmail
