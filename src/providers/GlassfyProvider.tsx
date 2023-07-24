@@ -42,31 +42,21 @@ export const GlassfyProvider = ({ children }: any) => {
   useEffect(() => {
     const init = async () => {
       // Intialise Glassfy and set our provider ready
-      await Glassfy.initialize(GLASSFY_KEY, false);
+      try {
+        await Glassfy.initialize("fce3f270cd3e4146b654e5a48c365bf5", false);
+      } catch (e) {}
+      await loadOfferings();
       setIsReady(true);
-      setIsGlassfyInitialized(true);
     };
     init();
   }, []);
 
-  const init = async () => {
-    await loadOfferings();
-    await loadPermissions();
-  };
-
-  useEffect(() => {
-    if (isReady) {
-      init();
-    }
-  }, [isReady]);
-
-  // Load all offerings a user can purchase
+  // Load all permissions a user has
   const loadOfferings = async () => {
-    // if (isGlassfyInitialized) {
-    let offerings = await Glassfy.offerings();
-    console.log("#######offerings", offerings.all[0].skus);
-    setOfferings(offerings.all);
-    // }
+    try {
+      const sku = await Glassfy.offerings();
+      setOfferings(sku.all);
+    } catch (err) {}
   };
 
   // Load all permissions a user has

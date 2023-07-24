@@ -6579,9 +6579,9 @@ react-native-gesture-handler@~2.9.0:
     lodash "^4.17.21"
     prop-types "^15.7.2"
 
-react-native-glassfy-module@^1.5.0:
+react-native-glassfy-module@^1.3.8:
   version "1.5.0"
-  resolved "https://registry.npmjs.org/react-native-glassfy-module/-/react-native-glassfy-module-1.5.0.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-glassfy-module/-/react-native-glassfy-module-1.5.0.tgz#05589a6d0fc5c4201b5a0802805df5a2d86d1aab"
   integrity sha512-4s9ZdOYTQayJ4RGB4iv1jHxotn+5Yw0n0pCKEV9RkHn0XZ6tY9Jxv+9zM4T/EGI5ZrDAcz51PMEAy/Th8YVlOw==
   dependencies:
     "@types/react-native" "^0.72.0"

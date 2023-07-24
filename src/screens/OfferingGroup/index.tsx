@@ -27,6 +27,8 @@ export function OfferingGroup({ route, navigation }: OfferingGroupProps) {
     }
   };
 
+  console.log('######', offerings)
+
   return (
     <>
       <Header title="Selecione seu plano" />

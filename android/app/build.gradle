@@ -116,7 +116,7 @@ android {
     namespace 'com.compregado'
     defaultConfig {
         applicationId 'com.compregado'
-        minSdkVersion 24
+        minSdkVersion 27
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0.0"
@@ -200,6 +200,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation ('io.glassfy:androidsdk:1.3.11')
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
