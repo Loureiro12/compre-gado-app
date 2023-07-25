@@ -42,7 +42,7 @@ export function RegisterCalculation() {
   const [gmd, setGmd] = useState(0);
   const [timeOfStay, setTimeOfStay] = useState(0);
   const [outputWeight, setOutputWeight] = useState(0);
-  const [rcInitial, setRcInitial] = useState<string>("0.0");
+  const [rcInitial, setRcInitial] = useState(0);
   const [rcFinal, setRcFinal] = useState<string>("0.0");
   const [atSalePrice, setAtSalePrice] = useState(0);
   const [purchasePrice, setPurchasePrice] = useState(0);
@@ -96,9 +96,6 @@ export function RegisterCalculation() {
         timeOfStay: Yup.number()
           .min(1, "Campo peso de entrada deve ser maior que 0")
           .required("Campo tempo Permanência é obrigatório"),
-        rcInitial: Yup.string()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
-          .required("Campo RC final é obrigatório"),
         rcFinal: Yup.string()
           .min(1, "Campo peso de entrada deve ser maior que 0")
           .required("Campo RC final é obrigatório"),
@@ -114,7 +111,6 @@ export function RegisterCalculation() {
         priceAtPurchase,
         gmd,
         timeOfStay,
-        rcInitial,
         rcFinal,
         atSalePrice,
       });
@@ -129,7 +125,7 @@ export function RegisterCalculation() {
         purchasePrice: purchasePrice.toString(),
         lengthOfStay: timeOfStay.toString(),
         outputWeight: outputWeight.toString(),
-        rcInitial: rcInitial,
+        rcInitial: rcInitial.toString(),
         rcEnd: rcFinal,
         salePrice: atSalePrice.toString(),
         producedPrice: priceAtProduced.toString(),
@@ -176,14 +172,14 @@ export function RegisterCalculation() {
 
   const handleChangePurchasePrice = async () => {
     const calc =
-      ((entryWeight * (parseFloat(rcInitial) / 100)) / 15) * priceAtPurchase;
+      ((entryWeight * (rcInitial / 100)) / 15) * priceAtPurchase;
     await setPurchasePrice(calc);
   };
 
   const handleChangeAmountOfAtProduced = async () => {
     const calc =
       (outputWeight * (parseFloat(rcFinal) / 100) -
-        entryWeight * (parseFloat(rcInitial) / 100)) /
+        entryWeight * (rcInitial / 100)) /
       15;
     await setBash(parseFloat(calc.toFixed(2)));
   };
@@ -206,6 +202,12 @@ export function RegisterCalculation() {
     await setResult(calc);
   };
 
+  const handleChangeRcInitial = async () => {
+    const calc = ((((0.5527 * entryWeight) - 20.676)*100) / entryWeight);
+
+    await setRcInitial(parseFloat(calc.toFixed(3)));
+  };
+
   const handleChangeOutputWeight = async () => {
     const calc = (gmd * timeOfStay) / 1000 + entryWeight;
     await setOutputWeight(calc);
@@ -219,6 +221,7 @@ export function RegisterCalculation() {
     handleChangePurchasePrice();
     handleChangeAmountOfAtProduced();
     handleChangeOutputWeight();
+    handleChangeRcInitial();
   }, [
     dailyCost,
     timeOfStay,
@@ -232,6 +235,7 @@ export function RegisterCalculation() {
     description,
     result,
     gmd,
+    rcInitial
   ]);
 
   return (
@@ -404,25 +408,9 @@ export function RegisterCalculation() {
 
             <View style={{ marginTop: 10 }} />
 
-            <InputSliderDecimalNumber
-              keyboardType="numeric"
+            <ShowResult
               title="RC inicial(%)"
-              placeholder="RC inicial"
-              autoCorrect={false}
-              keyboardAppearance="dark"
-              onChangeText={(e) => {
-                const regex = /^(\d+(\.\d{0,1})?)?$/;
-                if (regex.test(e)) {
-                  setRcInitial(e);
-                } else {
-                  setRcInitial(e);
-                }
-              }}
-              value={rcInitial}
-              inputValue={rcInitial ? parseFloat(rcInitial) : 0}
-              sliderValue={(newValue: number) => {
-                setRcInitial(newValue.toFixed(1));
-              }}
+              label={rcInitial}
             />
 
             <InputSliderDecimalNumber

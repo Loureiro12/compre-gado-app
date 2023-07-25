@@ -147,15 +147,18 @@ export function Dashboard({ navigation, route }: DashboardProps) {
 
     const dataFinal = dataInicial.clone().add(7, "days");
 
-    if (usePurchase.pro) {
-      navigation.navigate("RegisterCalculation");
-    } else {
-      if (dataAtual.isAfter(dataFinal)) {
-        setModalNeedSignature(true);
-      } else {
-        navigation.navigate("RegisterCalculation");
-      }
-    }
+    navigation.navigate("RegisterCalculation");
+
+
+    // if (usePurchase.pro) {
+    //   navigation.navigate("RegisterCalculation");
+    // } else {
+    //   if (dataAtual.isAfter(dataFinal)) {
+    //     setModalNeedSignature(true);
+    //   } else {
+    //     navigation.navigate("RegisterCalculation");
+    //   }
+    // }
   };
 
   useEffect(() => {
