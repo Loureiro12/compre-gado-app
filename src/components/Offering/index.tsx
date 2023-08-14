@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import React, { useState } from "react";
 import {
   GlassfyProduct,
@@ -40,8 +40,8 @@ const OfferingGroup = ({ group }: OfferingGroupProps) => {
 
       <SkuContainer>
         {group.skus.map((sku) => (
-          <>
-            <SkuButton key={sku.skuId}>
+          <View key={sku.skuId}>
+            <SkuButton>
               <SkuText>
                 <Text>
                   Tenha acesso a melhor calculadora para tomar as melhores
@@ -59,7 +59,7 @@ const OfferingGroup = ({ group }: OfferingGroupProps) => {
               enabled={!loadingPurchase}
               loading={loadingPurchase}
             />
-          </>
+          </View>
         ))}
       </SkuContainer>
     </OfferingContainer>
