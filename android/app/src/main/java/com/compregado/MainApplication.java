@@ -1,4 +1,4 @@
-package com.compregado;
+package com.melhoramais20;
 
 import android.app.Application;
 import android.content.res.Configuration;

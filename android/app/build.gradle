@@ -113,12 +113,12 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace 'com.compregado'
+    namespace 'com.melhoramais20'
     defaultConfig {
-        applicationId 'com.compregado'
+        applicationId 'com.melhoramais20'
         minSdkVersion 27
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 30
         versionName "1.0.0"
     }
 

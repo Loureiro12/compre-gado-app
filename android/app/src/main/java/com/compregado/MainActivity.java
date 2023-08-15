@@ -1,4 +1,4 @@
-package com.compregado;
+package com.melhoramais20;
 
 import android.os.Build;
 import android.os.Bundle;

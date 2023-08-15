@@ -8,6 +8,8 @@ import {
   GLASSFY_LOGLEVEL,
 } from "react-native-glassfy-module";
 import { useAuth } from "../hooks/auth";
+import Purchases, { LOG_LEVEL } from "react-native-purchases";
+import { Platform } from "react-native";
 
 interface GlassfyProps {
   purchase?: (sku: GlassfySku) => Promise<void>;
@@ -41,21 +43,25 @@ export const GlassfyProvider = ({ children }: any) => {
 
   useEffect(() => {
     const init = async () => {
-      // Intialise Glassfy and set our provider ready
-      try {
-        await Glassfy.initialize("fce3f270cd3e4146b654e5a48c365bf5", false);
-      } catch (e) {}
-      await loadOfferings();
-      setIsReady(true);
+      Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+
+      if (Platform.OS === "ios") {
+        Purchases.configure({ apiKey: "appl_aJuDfFQQPmYVoVPmllMKEsVxKHP" });
+      } else if (Platform.OS === "android") {
+        Purchases.configure({ apiKey: "goog_RrFQbMTeExyLAKWmDVHuNZzRnaO" });
+      }
     };
     init();
+    loadOfferings()
   }, []);
 
   // Load all permissions a user has
   const loadOfferings = async () => {
     try {
-      const sku = await Glassfy.offerings();
-      setOfferings(sku.all);
+      const offerings = await Purchases.getOfferings();
+      if (offerings.current !== null) {
+        console.log("###############", offerings);
+      }
     } catch (err) {}
   };
 
