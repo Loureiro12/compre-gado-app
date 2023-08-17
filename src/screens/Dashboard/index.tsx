@@ -14,7 +14,6 @@ import { api } from "../../services/api";
 import { RootStackParamList } from "../../routes/app.routes";
 import { WeatherForecast } from "../../components/WeatherForecast";
 
-
 import {
   Container,
   ButtonAddNewCalculation,
@@ -27,7 +26,8 @@ import {
   ModalAboutLocation,
   ModalNeedSignature,
 } from "./styles";
-import { useGlassfy } from "../../providers/GlassfyProvider";
+import Purchases from "react-native-purchases";
+import { API_KEY, ENTITLEMENT_ID } from "../../constants";
 
 interface DashboardProps
   extends StackScreenProps<RootStackParamList, "Dashboard"> {}
@@ -39,7 +39,6 @@ export interface RegisterCalculationEditProps {
 export function Dashboard({ navigation, route }: DashboardProps) {
   const { user, signOut } = useAuth();
   const netInfo = useNetInfo();
-  const { user: usePurchase } = useGlassfy();
 
   const [calculations, setCalculations] = useState<any[]>([]);
   const [currentCalculation, setCurrentCalculation] = useState("");
@@ -142,13 +141,25 @@ export function Dashboard({ navigation, route }: DashboardProps) {
     });
   };
 
-  const checkIfSignatureIsRequired = () => {
+  const getUserDetails = async () => {
+    const customerInfo = await Purchases.getCustomerInfo();
+
+    if (
+      typeof customerInfo.entitlements.active[ENTITLEMENT_ID] !== "undefined"
+    ) {
+      return true;
+    }
+  };
+
+  const checkIfSignatureIsRequired = async () => {
+    const responseUserDetails = await getUserDetails();
+
     const dataInicial = moment(user?.created_at);
     const dataAtual = moment();
 
     const dataFinal = dataInicial.clone().add(7, "days");
 
-    if (usePurchase.pro) {
+    if (responseUserDetails) {
       navigation.navigate("RegisterCalculation");
     } else {
       if (dataAtual.isAfter(dataFinal)) {
@@ -255,7 +266,9 @@ export function Dashboard({ navigation, route }: DashboardProps) {
         show={modalNeedSignature}
         close={() => setModalNeedSignature(false)}
         message="Você já experimentou o aplicativo gratuitamente por 7 dias. Para continuar utilizando, é necessário assinar."
-        onPressConfirmButton={() => navigation.navigate("OfferingGroup")}
+        onPressConfirmButton={() => {
+          navigation.navigate("OfferingGroup"), setModalNeedSignature(false);
+        }}
         cancelButtonText="Continuar sem Assinatura"
         confirmButtonText="Assinar Agora"
       />

@@ -1,66 +1,73 @@
 import { Text, View } from "react-native";
 import React, { useState } from "react";
-import {
-  GlassfyProduct,
-  GlassfySku,
-  GlassfyOffering,
-} from "react-native-glassfy-module";
-import { useGlassfy } from "../../providers/GlassfyProvider";
-import {
-  Offering,
-  OfferingContainer,
-  SkuButton,
-  SkuContainer,
-  SkuText,
-} from "./styles";
+
+import { OfferingContainer, SkuButton, SkuContainer, SkuText } from "./styles";
 import { Button } from "../Button";
+import Purchases from "react-native-purchases";
+import { useNavigation } from "@react-navigation/native";
+import { ENTITLEMENT_ID } from "../../constants";
+import { showMessage } from "react-native-flash-message";
 
 interface OfferingGroupProps {
-  group: GlassfyOffering;
+  purchasePackage: {
+    product: { title; description; priceString: string };
+  };
+  setIsPurchasing: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-// Represents one offering group with n SKU items to purchase
-const OfferingGroup = ({ group }: OfferingGroupProps) => {
-  const { purchase, loadingPurchase, user } = useGlassfy();
+const OfferingGroup = ({
+  purchasePackage,
+  setIsPurchasing,
+}: OfferingGroupProps) => {
+  const navigation = useNavigation();
 
-  const shouldPurchase = (sku: GlassfySku) => {
-    purchase!(sku);
+  const [loadingPurchase, setLoadingPurchase] = useState(false);
+
+  const onSelection = async () => {
+    setIsPurchasing(true);
+    setLoadingPurchase(true);
+
+    try {
+      const { customerInfo } = await Purchases.purchasePackage(purchasePackage);
+
+      if (
+        typeof customerInfo.entitlements.active[ENTITLEMENT_ID] !== "undefined"
+      ) {
+        navigation.goBack();
+      }
+    } catch (e) {
+      if (!e.userCancelled) {
+        showMessage({
+          message: "Ops...",
+          description: "Ocorreu um erro ao tentar realizar a compra!",
+          type: "danger",
+        });
+      }
+    } finally {
+      setLoadingPurchase(false);
+      setIsPurchasing(false);
+    }
   };
-
-  // FOrmat the price of a product
-  const numberFormat = (product: GlassfyProduct) =>
-    new Intl.NumberFormat("en-EN", {
-      style: "currency",
-      currency: product.currencyCode,
-    }).format(product.price);
 
   return (
     <OfferingContainer>
-      <Offering>{group.offeringId}</Offering>
-
       <SkuContainer>
-        {group.skus.map((sku) => (
-          <View key={sku.skuId}>
-            <SkuButton>
-              <SkuText>
-                <Text>
-                  Tenha acesso a melhor calculadora para tomar as melhores
-                  decisões na hora de comprar bovinos.
-                </Text>
-              </SkuText>
-            </SkuButton>
-            <Button
-              title={
-                user.pro
-                  ? "Você já possui uma assinatura!"
-                  : numberFormat(sku.product)
-              }
-              onPress={user.pro ? () => {} : () => shouldPurchase(sku)}
-              enabled={!loadingPurchase}
-              loading={loadingPurchase}
-            />
-          </View>
-        ))}
+        <View>
+          <SkuButton>
+            <SkuText>
+              <Text>
+                Tenha acesso a melhor calculadora para tomar as melhores
+                decisões na hora de comprar bovinos.
+              </Text>
+            </SkuText>
+          </SkuButton>
+          <Button
+            title={purchasePackage.product.priceString}
+            onPress={onSelection}
+            enabled={!loadingPurchase}
+            loading={loadingPurchase}
+          />
+        </View>
       </SkuContainer>
     </OfferingContainer>
   );

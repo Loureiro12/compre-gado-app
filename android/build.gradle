@@ -17,6 +17,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath('com.android.tools.build:gradle:7.4.1')
@@ -35,6 +36,7 @@ allprojects {
             url(new File(['node', '--print', "require.resolve('jsc-android/package.json')"].execute(null, rootDir).text.trim(), '../dist'))
         }
 
+        jcenter()
         google()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }

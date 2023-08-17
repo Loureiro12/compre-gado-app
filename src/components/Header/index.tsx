@@ -16,9 +16,10 @@ import {
 
 interface headerProps {
   title: string;
+  disabledGoBack?: boolean;
 }
 
-export function Header({ title }: headerProps) {
+export function Header({ title, disabledGoBack }: headerProps) {
   const navigation = useNavigation();
   const netInfo = useNetInfo();
 
@@ -35,7 +36,7 @@ export function Header({ title }: headerProps) {
     <>
       <Container>
         <SafeArea>
-          <ButtonExit activeOpacity={0.8} onPress={() => navigation.goBack()}>
+          <ButtonExit activeOpacity={0.8} onPress={() => navigation.goBack()} disabled={disabledGoBack}>
             <MaterialIcons name="arrow-back-ios" size={24} color="#FFFFFF" />
           </ButtonExit>
           <Title>{title}</Title>

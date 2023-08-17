@@ -10,6 +10,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {api} from "../services/api";
+import Purchases from "react-native-purchases";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -80,6 +81,8 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     const { access_token, user } = response.data;
 
+    await Purchases.logIn(user.id);
+
     await AsyncStorage.setItem(userStorageTokenKey, access_token);
     await AsyncStorage.setItem(userStorageUseKey, JSON.stringify(user));
 
@@ -91,6 +94,7 @@ function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   async function signOut() {
+    await Purchases.logOut();
     AsyncStorage.removeItem(userStorageUseKey);
     AsyncStorage.removeItem(userStorageTokenKey);
 

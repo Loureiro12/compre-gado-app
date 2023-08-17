@@ -13,17 +13,22 @@ import theme from "./src/theme";
 import { Loading } from "./src/components/Loading";
 import { Routes } from "./src/routes/index";
 import { AppProvider } from "./src/hooks";
-import { GlassfyProvider } from "./src/providers/GlassfyProvider";
-
+import { useEffect } from "react";
+import Purchases from "react-native-purchases";
+import { API_KEY } from "./src/constants";
 
 const App = () => {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
 
+  useEffect(() => {
+    Purchases.configure({ apiKey: API_KEY });
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       {/* <GlassfyProvider> */}
-        <AppProvider>{fontsLoaded ? <Routes /> : <Loading />}</AppProvider>
-        <FlashMessage position="top" />
+      <AppProvider>{fontsLoaded ? <Routes /> : <Loading />}</AppProvider>
+      <FlashMessage position="top" />
       {/* </GlassfyProvider> */}
     </ThemeProvider>
   );
