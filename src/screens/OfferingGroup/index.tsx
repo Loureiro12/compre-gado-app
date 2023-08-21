@@ -12,7 +12,9 @@ import {
   Container,
   ContainerRestoringPurchases,
   IsActiveSubscriptions,
+  Term,
   TextRestoringPurchases,
+  TextTerm,
 } from "./styles";
 import Offering from "../../components/Offering";
 import Purchases from "react-native-purchases";
@@ -79,6 +81,12 @@ export function OfferingGroup({ route, navigation }: OfferingGroupProps) {
     }
   };
 
+  const openTerm = () => {
+    Linking.openURL(
+      "https://www.iubenda.com/privacy-policy/43879835.pdf?admitad_uid=17691b157c9eb89c4c5c2437f3e196af&target=admitad"
+    );
+  };
+
   return (
     <>
       <Header title="Selecione seu plano" disabledGoBack={isPurchasing} />
@@ -114,6 +122,9 @@ export function OfferingGroup({ route, navigation }: OfferingGroupProps) {
                 </TextRestoringPurchases>
               )}
             </ButtonRestoringPurchases>
+            <Term onPress={openTerm}>
+            <TextTerm>Política de privacidade </TextTerm>
+          </Term>
           </ContainerRestoringPurchases>
         </Container>
       </ScrollView>

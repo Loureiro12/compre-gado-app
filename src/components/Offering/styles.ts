@@ -31,3 +31,14 @@ export const SkuDesc = styled.Text`
   color: #b6b7c0;
   padding-top: 4px;
 `;
+
+export const Topic = styled.Text`
+  margin: 5px 0px;
+`;
+
+export const TitleTopic = styled.Text`
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 10px;
+`;

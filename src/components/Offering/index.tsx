@@ -1,7 +1,14 @@
 import { Text, View } from "react-native";
 import React, { useState } from "react";
 
-import { OfferingContainer, SkuButton, SkuContainer, SkuText } from "./styles";
+import {
+  OfferingContainer,
+  SkuButton,
+  SkuContainer,
+  SkuText,
+  TitleTopic,
+  Topic,
+} from "./styles";
 import { Button } from "../Button";
 import Purchases from "react-native-purchases";
 import { useNavigation } from "@react-navigation/native";
@@ -55,14 +62,26 @@ const OfferingGroup = ({
         <View>
           <SkuButton>
             <SkuText>
-              <Text>
+              <Text style={{marginBottom: 10}}>
                 Tenha acesso a melhor calculadora para tomar as melhores
                 decisões na hora de comprar bovinos.
               </Text>
+              <View>
+                <TitleTopic>
+                Conheça os Principais Benefícios:
+                </TitleTopic>
+                <Topic>
+                  - Tenha acesso a melhor calculadora para tomada de decisões na
+                  hora de comprar bovinos.
+                </Topic>
+                <Topic>- Seja mais assertivo com seus cálculos.</Topic>
+                <Topic>- Salve todos seus cálculos.</Topic>
+                <Topic>- Acesse os cálculos de dispositivos diferente.</Topic>
+              </View>
             </SkuText>
           </SkuButton>
           <Button
-            title={purchasePackage.product.priceString}
+            title={`${purchasePackage.product.priceString}/mês`}
             onPress={onSelection}
             enabled={!loadingPurchase}
             loading={loadingPurchase}

@@ -42,7 +42,7 @@ export default function SignIn() {
         password: Yup.string().required("A senha é obrigatório"),
       });
       await schema.validate({ email, password });
-      await signIn({ email, password });
+      const teste = await signIn({ email, password });
       showMessage({
         message: "Sucesso!",
         description: "Login realizado com sucesso!",

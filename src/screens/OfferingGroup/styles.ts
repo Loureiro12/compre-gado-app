@@ -20,3 +20,13 @@ export const ButtonRestoringPurchases = styled.TouchableOpacity`
 export const TextRestoringPurchases = styled.Text``;
 
 export const IsActiveSubscriptions = styled.Text``
+
+export const Term = styled.TouchableOpacity`
+  margin-bottom: 20px;
+`;
+
+export const TextTerm = styled.Text`
+  font-size: ${({ theme }) => theme.FONT_SIZE.LG}px;
+  font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
+  color: ${({ theme }) => theme.COLORS.PRIMARY};
+`;
