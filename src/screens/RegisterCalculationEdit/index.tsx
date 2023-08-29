@@ -76,7 +76,7 @@ export function RegisterCalculationEdit({
 
   const [title, setTitle] = useState("");
   const [entryWeight, setEntryWeight] = useState(0);
-  const [dailyCost, setDailyCost] = useState(0);
+  const [dailyCost, setDailyCost] = useState("0.00");
   const [priceAtPurchase, setPriceAtPurchase] = useState(0);
   const [gmd, setGmd] = useState(0);
   const [timeOfStay, setTimeOfStay] = useState(0);
@@ -97,7 +97,7 @@ export function RegisterCalculationEdit({
     const [dailyCostNumber, priceAtPurchaseNumber] = value.dailyCost.split("-");
     setTitle(value.title);
     setEntryWeight(parseFloat(value.entranceWeight));
-    setDailyCost(parseFloat(dailyCostNumber));
+    setDailyCost(dailyCostNumber);
     setPriceAtPurchase(parseFloat(priceAtPurchaseNumber));
     setGmd(parseFloat(value.gmd));
     setTimeOfStay(parseFloat(value.lengthOfStay));
@@ -145,22 +145,22 @@ export function RegisterCalculationEdit({
           .min(1, "Campo peso de entrada deve ser maior que 0")
           .required("Campo peso de entrada é obrigatório"),
         dailyCost: Yup.number()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
+          .min(1, "Campo Custo diário deve ser maior que 0")
           .required("Campo custo diário é obrigatório"),
         priceAtPurchase: Yup.number()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
+          .min(1, "Campo Preço @ compra deve ser maior que 0")
           .required("Campo preço @ compra é obrigatório"),
         gmd: Yup.number()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
+          .min(1, "Campo GMD deve ser maior que 0")
           .required("Campo GMD é obrigatório"),
         timeOfStay: Yup.number()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
+          .min(1, "Campo Tempo Permanência deve ser maior que 0")
           .required("Campo tempo Permanência é obrigatório"),
         rcFinal: Yup.string()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
+          .min(1, "Campo RC final deve ser maior que 0")
           .required("Campo RC final é obrigatório"),
         atSalePrice: Yup.number()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
+          .min(1, "Campo preço @ de venda deve ser maior que 0")
           .required("Campo preço @ de venda é obrigatório"),
       });
 
@@ -225,7 +225,7 @@ export function RegisterCalculationEdit({
   }
 
   const handleChangePriceAtProduced = async () => {
-    const calc = (dailyCost * timeOfStay) / bash;
+    const calc = (parseFloat(dailyCost) * timeOfStay) / bash;
     await setPriceAtProduced(parseFloat(calc.toFixed(2)));
   };
 
@@ -250,13 +250,14 @@ export function RegisterCalculationEdit({
 
   const handleChangeReturnOnCapital = async () => {
     const calc =
-      ((result / (purchasePrice + dailyCost * timeOfStay)) * 100) /
+      ((result / (purchasePrice + parseFloat(dailyCost) * timeOfStay)) * 100) /
       (timeOfStay / 30.41);
     await setReturnOnCapital(parseFloat(calc.toFixed(2)));
   };
 
   const handleChangeResult = async () => {
-    const calc = description - (dailyCost * timeOfStay + purchasePrice);
+    const calc =
+      description - (parseFloat(dailyCost) * timeOfStay + purchasePrice);
     await setResult(calc);
   };
 
@@ -366,28 +367,26 @@ export function RegisterCalculationEdit({
                 inputValue={entryWeight}
                 maximumValueSlider={1500}
               />
-              <InputSlider
+              <InputSliderDecimalNumber
+                keyboardType="numeric"
                 title="Custo diário(R$)"
                 placeholder="Custo diário"
-                autoCapitalize="none"
                 autoCorrect={false}
                 keyboardAppearance="dark"
-                keyboardType="numeric"
                 onChangeText={(e) => {
-                  if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
-                    setDailyCost(0);
+                  const regex = /^(\d+(\.\d{0,11})?)?$/;
+                  if (regex.test(e)) {
+                    setDailyCost(e);
                   } else {
-                    const num = parseFloat(e);
-                    if (!isNaN(num) && num <= 100) {
-                      setDailyCost(num);
-                    }
+                    setDailyCost(e);
                   }
                 }}
-                value={dailyCost.toString()}
-                sliderValue={(value) => setDailyCost(value)}
-                isSlide
-                inputValue={dailyCost}
-                maximumValueSlider={100}
+                value={dailyCost}
+                inputValue={dailyCost ? parseFloat(dailyCost) : 0}
+                sliderValue={(newValue: number) => {
+                  setDailyCost(newValue.toFixed(2));
+                }}
+                maximumValue={50}
               />
 
               <InputSlider
@@ -485,6 +484,7 @@ export function RegisterCalculationEdit({
                 sliderValue={(newValue: number) => {
                   setRcFinal(newValue.toFixed(1));
                 }}
+                maximumValue={100}
               />
 
               <InputSlider

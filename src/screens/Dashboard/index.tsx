@@ -159,15 +159,15 @@ export function Dashboard({ navigation, route }: DashboardProps) {
 
     const dataFinal = dataInicial.clone().add(7, "days");
 
-    if (responseUserDetails) {
-      navigation.navigate("RegisterCalculation");
-    } else {
-      if (dataAtual.isAfter(dataFinal)) {
-        setModalNeedSignature(true);
-      } else {
+    // if (responseUserDetails) {
+    //   navigation.navigate("RegisterCalculation");
+    // } else {
+    //   if (dataAtual.isAfter(dataFinal)) {
+    //     setModalNeedSignature(true);
+    //   } else {
         navigation.navigate("RegisterCalculation");
-      }
-    }
+    //   }
+    // }
   };
 
   useEffect(() => {

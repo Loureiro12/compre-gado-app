@@ -37,7 +37,7 @@ export function RegisterCalculation() {
 
   const [title, setTitle] = useState("");
   const [entryWeight, setEntryWeight] = useState(0);
-  const [dailyCost, setDailyCost] = useState(0);
+  const [dailyCost, setDailyCost] = useState("0.00");
   const [priceAtPurchase, setPriceAtPurchase] = useState(0);
   const [gmd, setGmd] = useState(0);
   const [timeOfStay, setTimeOfStay] = useState(0);
@@ -85,22 +85,22 @@ export function RegisterCalculation() {
           .min(1, "Campo peso de entrada deve ser maior que 0")
           .required("Campo peso de entrada é obrigatório"),
         dailyCost: Yup.number()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
+          .min(1, "Campo Custo diário deve ser maior que 0")
           .required("Campo custo diário é obrigatório"),
         priceAtPurchase: Yup.number()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
+          .min(1, "Campo Preço @ compra deve ser maior que 0")
           .required("Campo preço @ compra é obrigatório"),
         gmd: Yup.number()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
+          .min(1, "Campo GMD deve ser maior que 0")
           .required("Campo GMD é obrigatório"),
         timeOfStay: Yup.number()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
+          .min(1, "Campo Tempo Permanência deve ser maior que 0")
           .required("Campo tempo Permanência é obrigatório"),
         rcFinal: Yup.string()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
+          .min(1, "Campo RC final deve ser maior que 0")
           .required("Campo RC final é obrigatório"),
         atSalePrice: Yup.number()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
+          .min(1, "Campo preço @ de venda deve ser maior que 0")
           .required("Campo preço @ de venda é obrigatório"),
       });
 
@@ -166,13 +166,12 @@ export function RegisterCalculation() {
   }
 
   const handleChangePriceAtProduced = async () => {
-    const calc = (dailyCost * timeOfStay) / bash;
+    const calc = (parseFloat(dailyCost) * timeOfStay) / bash;
     await setPriceAtProduced(parseFloat(calc.toFixed(2)));
   };
 
   const handleChangePurchasePrice = async () => {
-    const calc =
-      ((entryWeight * (rcInitial / 100)) / 15) * priceAtPurchase;
+    const calc = ((entryWeight * (rcInitial / 100)) / 15) * priceAtPurchase;
     await setPurchasePrice(calc);
   };
 
@@ -192,18 +191,19 @@ export function RegisterCalculation() {
 
   const handleChangeReturnOnCapital = async () => {
     const calc =
-      ((result / (purchasePrice + dailyCost * timeOfStay)) * 100) /
+      ((result / (purchasePrice + parseFloat(dailyCost) * timeOfStay)) * 100) /
       (timeOfStay / 30.41);
     await setReturnOnCapital(parseFloat(calc.toFixed(2)));
   };
 
   const handleChangeResult = async () => {
-    const calc = description - (dailyCost * timeOfStay + purchasePrice);
+    const calc =
+      description - (parseFloat(dailyCost) * timeOfStay + purchasePrice);
     await setResult(calc);
   };
 
   const handleChangeRcInitial = async () => {
-    const calc = ((((0.5527 * entryWeight) - 20.676)*100) / entryWeight);
+    const calc = ((0.5527 * entryWeight - 20.676) * 100) / entryWeight;
 
     await setRcInitial(parseFloat(calc.toFixed(3)));
   };
@@ -235,7 +235,7 @@ export function RegisterCalculation() {
     description,
     result,
     gmd,
-    rcInitial
+    rcInitial,
   ]);
 
   return (
@@ -274,7 +274,11 @@ export function RegisterCalculation() {
                   />
                 ))}
             </ContainerTag>
-            <ButtonAddTag onPress={() => navigation.navigate("CreateTag", {flow: 'CreateCalculation'})}>
+            <ButtonAddTag
+              onPress={() =>
+                navigation.navigate("CreateTag", { flow: "CreateCalculation" })
+              }
+            >
               <TitleButtonTag>Criar nova etiqueta</TitleButtonTag>
             </ButtonAddTag>
             <Input
@@ -308,35 +312,34 @@ export function RegisterCalculation() {
               sliderValue={(value) => setEntryWeight(value)}
               isSlide
               inputValue={entryWeight}
-              maximumValueSlider={1500}
+              maximumValueSlider={1000}
             />
-            <InputSlider
+
+            <InputSliderDecimalNumber
+              keyboardType="numeric"
               title="Custo diário(R$)"
               placeholder="Custo diário"
-              autoCapitalize="none"
               autoCorrect={false}
               keyboardAppearance="dark"
-              keyboardType="numeric"
               onChangeText={(e) => {
-                if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
-                  setDailyCost(0);
+                const regex = /^(\d+(\.\d{0,11})?)?$/;
+                if (regex.test(e)) {
+                  setDailyCost(e);
                 } else {
-                  const num = parseFloat(e);
-                  if (!isNaN(num) && num <= 100) {
-                    setDailyCost(num);
-                  }
+                  setDailyCost(e);
                 }
               }}
-              value={dailyCost.toString()}
-              sliderValue={(value) => setDailyCost(value)}
-              isSlide
-              inputValue={dailyCost}
-              maximumValueSlider={100}
+              value={dailyCost}
+              inputValue={dailyCost ? parseFloat(dailyCost) : 0}
+              sliderValue={(newValue: number) => {
+                setDailyCost(newValue.toFixed(2));
+              }}
+              maximumValue={50}
             />
 
             <InputSlider
               title="Preço @ compra(R$)"
-              placeholder="Preço"
+              placeholder="Preço @ compra"
               autoCorrect={false}
               keyboardAppearance="dark"
               keyboardType="numeric"
@@ -354,7 +357,7 @@ export function RegisterCalculation() {
               sliderValue={(value) => setPriceAtPurchase(value)}
               isSlide
               inputValue={priceAtPurchase}
-              maximumValueSlider={1000}
+              maximumValueSlider={500}
             />
             <InputSlider
               title="GMD(g)"
@@ -408,10 +411,7 @@ export function RegisterCalculation() {
 
             <View style={{ marginTop: 10 }} />
 
-            <ShowResult
-              title="RC inicial(%)"
-              label={rcInitial}
-            />
+            <ShowResult title="RC inicial(%)" label={rcInitial} />
 
             <InputSliderDecimalNumber
               keyboardType="numeric"
@@ -432,6 +432,7 @@ export function RegisterCalculation() {
               sliderValue={(newValue: number) => {
                 setRcFinal(newValue.toFixed(1));
               }}
+              maximumValue={100}
             />
 
             <InputSlider
@@ -455,7 +456,7 @@ export function RegisterCalculation() {
               sliderValue={(value) => setAtSalePrice(value)}
               isSlide
               inputValue={atSalePrice}
-              maximumValueSlider={1000}
+              maximumValueSlider={500}
             />
 
             <ShowResult
@@ -477,7 +478,7 @@ export function RegisterCalculation() {
             />
 
             <ShowResult
-              title="Rendimento do capital(%)"
+              title="Rendimento do capital(%)/mensal"
               label={returnOnCapital}
             />
 

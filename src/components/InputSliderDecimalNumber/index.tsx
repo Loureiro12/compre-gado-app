@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Slider from "@react-native-community/slider";
 
 import { TextInputProps } from "react-native";
@@ -19,6 +19,7 @@ interface InputSliderDecimalNumberProps extends TextInputProps {
   error?: React.ReactNode;
   sliderValue: ((value: number) => void) | undefined;
   inputValue: number;
+  maximumValue: number
 }
 
 export function InputSliderDecimalNumber({
@@ -27,18 +28,9 @@ export function InputSliderDecimalNumber({
   sliderValue,
   error,
   inputValue,
+  maximumValue,
   ...rest
 }: InputSliderDecimalNumberProps) {
-  const [value, setValue] = useState<string>("0.0");
-
-  const handleInputChange = (newValue: string) => {
-    const regex = /^(\d+(\.\d{0,1})?)?$/;
-    if (regex.test(newValue)) {
-      setValue(newValue);
-    } else {
-      setValue(value);
-    }
-  };
 
   return (
     <>
@@ -65,7 +57,7 @@ export function InputSliderDecimalNumber({
             minimumTrackTintColor="#FF5531"
             maximumTrackTintColor="#C8C8C8"
             thumbTintColor="#FF5531"
-            maximumValue={100}
+            maximumValue={maximumValue}
             minimumValue={1}
           />
       </Container>
