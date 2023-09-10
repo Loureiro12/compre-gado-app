@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+
 import * as Yup from "yup";
 import { ptForm } from "yup-locale-pt";
 Yup.setLocale(ptForm);
@@ -11,6 +12,11 @@ import { Header } from "../../components/Header";
 import { InputSlider } from "../../components/InputSlider";
 import { Input } from "../../components/Input";
 import { Tag } from "../../components/Tag";
+import { ShowResult } from "../../components/ShowResult";
+import { InputSliderDecimalNumber } from "../../components/InputSliderDecimalNumber";
+
+import { api } from "../../services/api";
+import theme from "../../theme/index";
 
 import {
   Container,
@@ -23,10 +29,6 @@ import {
   ButtonManageTag,
   TextManageTag,
 } from "./styles";
-import { api } from "../../services/api";
-import { ShowResult } from "../../components/ShowResult";
-import theme from "../../theme/index";
-import { InputSliderDecimalNumber } from "../../components/InputSliderDecimalNumber";
 
 export function RegisterCalculation() {
   const navigation = useNavigation();
@@ -169,72 +171,48 @@ export function RegisterCalculation() {
     setLoading(false);
   }
 
-  const handleChangePriceAtProduced = async () => {
+  useMemo(() => {
     const calc = (parseFloat(dailyCost) * timeOfStay) / bash;
-    await setPriceAtProduced(parseFloat(calc.toFixed(2)));
-  };
+    setPriceAtProduced(parseFloat(calc.toFixed(2)));
+  }, [dailyCost, timeOfStay, bash]);
 
-  const handleChangePurchasePrice = async () => {
+  useMemo(() => {
     const calc =
       ((entryWeight * (parseFloat(rcInitial) / 100)) / 15) * priceAtPurchase;
-    await setPurchasePrice(calc);
-  };
+    setPurchasePrice(calc);
+  }, [entryWeight, rcInitial, priceAtPurchase]);
 
-  const handleChangeAmountOfAtProduced = async () => {
+  useMemo(() => {
     const calc =
       (outputWeight * (parseFloat(rcFinal) / 100) -
         entryWeight * (parseFloat(rcInitial) / 100)) /
       15;
-    await setBash(parseFloat(calc.toFixed(2)));
-  };
+    setBash(parseFloat(calc.toFixed(2)));
+  }, [outputWeight, rcFinal, entryWeight, rcInitial]);
 
-  const handleChangeSalePrice = async () => {
+  useMemo(() => {
     const calc =
       ((outputWeight * (parseFloat(rcFinal) / 100)) / 15) * atSalePrice;
-    await setDescription(calc);
-  };
+    setDescription(calc);
+  }, [outputWeight, rcFinal, atSalePrice]);
 
-  const handleChangeReturnOnCapital = async () => {
+  useMemo(() => {
     const calc =
       ((result / (purchasePrice + parseFloat(dailyCost) * timeOfStay)) * 100) /
       (timeOfStay / 30.41);
-    await setReturnOnCapital(parseFloat(calc.toFixed(2)));
-  };
+    setReturnOnCapital(parseFloat(calc.toFixed(2)));
+  }, [result, purchasePrice, dailyCost, timeOfStay]);
 
-  const handleChangeResult = async () => {
+  useMemo(() => {
     const calc =
       description - (parseFloat(dailyCost) * timeOfStay + purchasePrice);
-    await setResult(calc);
-  };
+    setResult(calc);
+  }, [description, dailyCost, timeOfStay, purchasePrice]);
 
-  const handleChangeOutputWeight = async () => {
+  useMemo(() => {
     const calc = (gmd * timeOfStay) / 1000 + entryWeight;
-    await setOutputWeight(calc);
-  };
-
-  useEffect(() => {
-    handleChangeSalePrice();
-    handleChangeReturnOnCapital();
-    handleChangeResult();
-    handleChangePriceAtProduced();
-    handleChangePurchasePrice();
-    handleChangeAmountOfAtProduced();
-    handleChangeOutputWeight();
-  }, [
-    dailyCost,
-    timeOfStay,
-    entryWeight,
-    rcInitial,
-    priceAtPurchase,
-    outputWeight,
-    rcFinal,
-    atSalePrice,
-    purchasePrice,
-    description,
-    result,
-    gmd,
-    rcInitial,
-  ]);
+    setOutputWeight(calc);
+  }, [gmd, timeOfStay, entryWeight]);
 
   return (
     <>

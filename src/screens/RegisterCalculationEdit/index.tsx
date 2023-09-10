@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import * as Yup from "yup";
 import { ptForm } from "yup-locale-pt";
@@ -224,76 +224,47 @@ export function RegisterCalculationEdit({
     setLoading(false);
   }
 
-  const handleChangePriceAtProduced = async () => {
+  useMemo(() => {
     const calc = (parseFloat(dailyCost) * timeOfStay) / bash;
-    await setPriceAtProduced(parseFloat(calc.toFixed(2)));
-  };
+    setPriceAtProduced(parseFloat(calc.toFixed(2)));
+  }, [dailyCost, timeOfStay, bash]);
 
-  const handleChangePurchasePrice = async () => {
+  useMemo(() => {
     const calc = ((entryWeight * (rcInitial / 100)) / 15) * priceAtPurchase;
-    await setPurchasePrice(calc);
-  };
+    setPurchasePrice(calc);
+  }, [entryWeight, rcInitial, priceAtPurchase]);
 
-  const handleChangeAmountOfAtProduced = async () => {
+  useMemo(() => {
     const calc =
       (outputWeight * (parseFloat(rcFinal) / 100) -
         entryWeight * (rcInitial / 100)) /
       15;
-    await setBash(parseFloat(calc.toFixed(2)));
-  };
+    setBash(parseFloat(calc.toFixed(2)));
+  }, [outputWeight, rcFinal, entryWeight, rcInitial]);
 
-  const handleChangeSalePrice = async () => {
+  useMemo(() => {
     const calc =
       ((outputWeight * (parseFloat(rcFinal) / 100)) / 15) * atSalePrice;
-    await setDescription(calc);
-  };
+    setDescription(calc);
+  }, [outputWeight, rcFinal, atSalePrice]);
 
-  const handleChangeReturnOnCapital = async () => {
+  useMemo(() => {
     const calc =
       ((result / (purchasePrice + parseFloat(dailyCost) * timeOfStay)) * 100) /
       (timeOfStay / 30.41);
-    await setReturnOnCapital(parseFloat(calc.toFixed(2)));
-  };
+    setReturnOnCapital(parseFloat(calc.toFixed(2)));
+  }, [result, purchasePrice, dailyCost, timeOfStay]);
 
-  const handleChangeResult = async () => {
+  useMemo(() => {
     const calc =
       description - (parseFloat(dailyCost) * timeOfStay + purchasePrice);
-    await setResult(calc);
-  };
+    setResult(calc);
+  }, [description, dailyCost, timeOfStay, purchasePrice]);
 
-  const handleChangeOutputWeight = async () => {
+  useMemo(() => {
     const calc = (gmd * timeOfStay) / 1000 + entryWeight;
-    await setOutputWeight(calc);
-  };
-
-  const handleChangeRcInitial = async () => {
-    const calc = ((0.5527 * entryWeight - 20.676) * 100) / entryWeight;
-
-    await setRcInitial(parseFloat(calc.toFixed(3)));
-  };
-
-  useEffect(() => {
-    handleChangeSalePrice();
-    handleChangeReturnOnCapital();
-    handleChangeResult();
-    handleChangePriceAtProduced();
-    handleChangePurchasePrice();
-    handleChangeAmountOfAtProduced();
-    handleChangeOutputWeight();
-  }, [
-    dailyCost,
-    timeOfStay,
-    entryWeight,
-    rcInitial,
-    priceAtPurchase,
-    outputWeight,
-    rcFinal,
-    atSalePrice,
-    purchasePrice,
-    description,
-    result,
-    gmd,
-  ]);
+    setOutputWeight(calc);
+  }, [gmd, timeOfStay, entryWeight]);
 
   useEffect(() => {
     tagSearch();

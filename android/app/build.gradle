@@ -118,7 +118,7 @@ android {
         applicationId 'com.melhoramais20'
         minSdkVersion 27
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 36
+        versionCode 38
         versionName "2.0.0"
     }
 
