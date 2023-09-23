@@ -64,6 +64,7 @@ export function SignUp() {
 
       await schema.validate({ email, password, name });
       await api.post("/users", { name, email, password });
+
       showMessage({
         message: "Cadastro realizado com sucesso!",
         description: "Você já pode realizar o login no aplicativo",
@@ -73,7 +74,14 @@ export function SignUp() {
       navigation.goBack();
       setLoading(false);
     } catch (error) {
-      if (error instanceof Yup.ValidationError) {
+      if (error.message === "Request failed with status code 422") {
+        showMessage({
+          message: "Opa",
+          description: "Já existe um usuário com esse email.",
+          type: "danger",
+        });
+        setLoading(false);
+      } else if (error instanceof Yup.ValidationError) {
         showMessage({
           message: "Opa",
           description: error.message,
@@ -102,8 +110,8 @@ export function SignUp() {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : undefined}
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 0 : undefined}
             enabled
             style={{
               flex: 1,

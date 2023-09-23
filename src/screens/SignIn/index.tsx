@@ -42,7 +42,8 @@ export default function SignIn() {
         password: Yup.string().required("A senha é obrigatório"),
       });
       await schema.validate({ email, password });
-      const teste = await signIn({ email, password });
+      await signIn({ email, password });
+
       showMessage({
         message: "Sucesso!",
         description: "Login realizado com sucesso!",
@@ -72,63 +73,67 @@ export default function SignIn() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.COLORS.GRAY_50 }}>
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : undefined}
-        enabled
-        style={{
-          flex: 1,
-          backgroundColor: theme.COLORS.GRAY_50,
-        }}
-      >
-        <StatusBar
-          backgroundColor={theme.COLORS.GRAY_50}
-          barStyle="dark-content"
-        />
-        <S.Container>
-          <S.Header>
-            <S.Title>Estamos{"\n"}quase lá.</S.Title>
-            <S.SubTitle>
-              Sua ferramenta inteligente para tomada de decisões na compra de
-              gado.
-            </S.SubTitle>
-          </S.Header>
-          <InputEmail
-            placeholder="E-mail"
-            keyboardType="email-address"
-            autoCorrect={false}
-            autoCapitalize="none"
-            onChangeText={setEmail}
-            value={email}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : undefined}
+          enabled
+          style={{
+            flex: 1,
+            backgroundColor: theme.COLORS.GRAY_50,
+          }}
+        >
+          <StatusBar
+            backgroundColor={theme.COLORS.GRAY_50}
+            barStyle="dark-content"
           />
-          <PasswordInput
-            placeholder="Senha"
-            onChangeText={setPassword}
-            value={password}
-          />
+          <S.Container>
+            <S.Header>
+              <S.Title>Estamos{"\n"}quase lá.</S.Title>
+              <S.SubTitle>
+                Sua ferramenta inteligente para tomada de decisões na compra de
+                gado.
+              </S.SubTitle>
+            </S.Header>
+            <InputEmail
+              placeholder="E-mail"
+              keyboardType="email-address"
+              autoCorrect={false}
+              autoCapitalize="none"
+              onChangeText={setEmail}
+              value={email}
+            />
+            <PasswordInput
+              placeholder="Senha"
+              onChangeText={setPassword}
+              value={password}
+            />
 
-          <BorderlessButton onPress={() => navigation.navigate("tokenSending")}>
-            <S.ButtonForgotPassword>Esqueci minha senha</S.ButtonForgotPassword>
-          </BorderlessButton>
-
-          <S.ButtonLogin
-            title="Entrar"
-            onPress={handleSignIn}
-            enabled={!loading}
-            loading={loading}
-          />
-
-          <S.Footer>
-            <BorderlessButton onPress={() => navigation.navigate("signUp")}>
-              <S.ButtonCreateAccount>
-                Não tem uma conta? Faça seu cadastro
-              </S.ButtonCreateAccount>
+            <BorderlessButton
+              onPress={() => navigation.navigate("tokenSending")}
+            >
+              <S.ButtonForgotPassword>
+                Esqueci minha senha
+              </S.ButtonForgotPassword>
             </BorderlessButton>
-          </S.Footer>
-        </S.Container>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
-  </SafeAreaView>
+
+            <S.ButtonLogin
+              title="Entrar"
+              onPress={handleSignIn}
+              enabled={!loading}
+              loading={loading}
+            />
+
+            <S.Footer>
+              <BorderlessButton onPress={() => navigation.navigate("signUp")}>
+                <S.ButtonCreateAccount>
+                  Não tem uma conta? Faça seu cadastro
+                </S.ButtonCreateAccount>
+              </BorderlessButton>
+            </S.Footer>
+          </S.Container>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 }

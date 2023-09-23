@@ -90,7 +90,6 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     setUser(user);
 
-    // setData({ access_token, user });
   }, []);
 
   async function signOut() {
